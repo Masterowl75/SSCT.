@@ -75,16 +75,25 @@
     </div>
 
     <script>
-        // JavaScript code for handling the chat interface
         document.addEventListener('DOMContentLoaded', function () {
             const chatMessages = document.getElementById('chat-messages');
             const messageInput = document.getElementById('message-input');
             const sendButton = document.getElementById('send-button');
 
+            // Load messages from localStorage on page load
+            const savedMessages = JSON.parse(localStorage.getItem('chatMessages')) || [];
+            savedMessages.forEach(message => {
+                appendMessage(message.sender, message.text);
+            });
+
             sendButton.addEventListener('click', function () {
                 const messageText = messageInput.value.trim();
                 if (messageText !== '') {
                     appendMessage('You', messageText);
+                    // Save message to localStorage
+                    const newMessage = { sender: 'You', text: messageText };
+                    savedMessages.push(newMessage);
+                    localStorage.setItem('chatMessages', JSON.stringify(savedMessages));
                     messageInput.value = '';
                 }
             });
